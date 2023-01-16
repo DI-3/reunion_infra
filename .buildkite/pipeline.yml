@@ -1,0 +1,96 @@
+# =========================================================================================
+# These sample BK steps will set up [VCS driven](https://www.terraform.io/cloud-docs/run/ui)
+# workflows in TFE. With VCS driven workflows, plans and applies
+# are handled by a direct webhook from Github to TFE, and are not handled by BK plugin.
+# Please, refer to 
+# [Decoupled Infrastrcuture Buildkite Plugin Documentation](https://docs.csnzoo.com/shared/decoupled-infrastructure-buildkite-plugin/)
+# for more information about the plugin.
+# ==========================================================================================
+
+steps:
+  # This step initializes a dev TFE workspace, linked to a VCS repository.
+  # DEV and PROD workspaces in given example share a terraform configuration from
+  # `shared_working_directory` folder (note the `working_directory` setting below).
+  # The difference between environments is in
+  # variables passed in .TFVAR file specific to environment
+  - label: "Initialize Dev TFE Workspace"
+    branches: "main"
+    env:
+      BUILDKITE_VAULT_SECRET: "tfe_token"
+    plugins:
+      - ssh://git@github.csnzoo.com/shared/decoupled-infrastructure-buildkite-plugin#v0.1.0:
+          command: "setup"
+          organization: "content"
+          workspace: "btbl-content-infra-dev"
+          terraform_version: "1.2.3"
+          working_directory: "terraform/shared_working_directory"
+          variable_sets:
+            - "dev-variables"
+          vcs:
+            branch: "main"
+            paths:
+              - "/terraform/environments/dev.tfvars"
+          variable_files:
+            - "../environments/dev/dev.tfvars"
+          tags:
+            - "repo:btbl-content-infra"
+            - "env:dev"
+    agents:
+      queue: docker_prod
+
+  # This step initializes a prod TFE workspace, linked to a VCS repository.
+  # DEV and PROD workspaces in given example share a terraform configuration from
+  # `shared_working_directory` folder. The difference between environments is in
+  # variables passed in .TFVAR file specific to environment
+  - label: "Initialize PROD TFE Workspace"
+    branches: "main"
+    env:
+      BUILDKITE_VAULT_SECRET: "tfe_token"
+    plugins:
+      - ssh://git@github.csnzoo.com/shared/decoupled-infrastructure-buildkite-plugin#v0.1.0:
+          command: "setup"
+          organization: "content"
+          workspace: "btbl-content-infra-prod"
+          terraform_version: "1.2.3"
+          working_directory: "terraform/shared_working_directory"
+          variable_sets:
+            - "prod-variables"
+          vcs:
+            branch: "main"
+            paths:
+              - "/terraform/environments/prod.tfvars"
+          variable_files:
+            - "../environments/prod/prod.tfvars"
+          tags:
+            - "repo:btbl-content-infra"
+            - "env:prod"
+    agents:
+      queue: docker_prod
+
+  # This step initializes a SBX TFE workspace, linked to a VCS repository.
+  # In this example SBX workspace is utilizing a "dedicated" terraform configuration
+  # `environments/sbx` folder (note the `working_directory` setting below).
+  - label: "Initialize SBX TFE Workspace"
+    branches: "main"
+    env:
+      BUILDKITE_VAULT_SECRET: "tfe_token"
+    plugins:
+      - ssh://git@github.csnzoo.com/shared/decoupled-infrastructure-buildkite-plugin#v0.1.0:
+          command: "setup"
+          organization: "content"
+          workspace: "btbl-content-infra-sbx"
+          terraform_version: "1.2.3"
+          working_directory: "terraform/environments/sbx"
+          variable_sets:
+            - "sbx-variables"
+          vcs:
+            branch: "main"
+            paths:
+              - "/terraform/environments/sbx.tfvars"
+          variable_files:
+            - "./sbx.tfvars"
+          tags:
+            - "repo:btbl-content-infra"
+            - "env:sbx"
+    agents:
+      queue: docker_prod

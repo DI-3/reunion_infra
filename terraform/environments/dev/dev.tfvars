@@ -1,0 +1,6 @@
+greeting                             = "Hello from dev!"
+export_excel_processor_cloudrun_name = "export-excel-processor"
+export_excel_creator_cloudrun_name   = "export-excel-creator"
+export_zip_service_cloudrun_name     = "export-zip-service-es"
+export_excel_files_bucket_name       = "export-excel-storage"
+target_service_attachment            = "https://www.googleapis.com/compute/beta/projects/wf-gcp-us-sde-k8s-prod/regions/us-central1/serviceAttachments/k8s1-sa-r877bh3a-wf-istio-decentralized-i-decentralize-m7rrarag"
