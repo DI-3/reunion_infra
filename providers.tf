@@ -5,7 +5,7 @@ provider "google" {
 
 terraform {
   backend "gcs" {
-    bucket = "universal-valve-373803-tfstate"
+    bucket = "universal-valve-bucket-373803"
     prefix = "terraform/state"
   }
 }
