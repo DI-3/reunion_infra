@@ -18,7 +18,7 @@ resource "google_cloud_run_service" "reunion_cr_service" {
     template {
       spec {
         containers {
-          image = "gcr.io/universal-valve-373803/reunion:latest"
+          image = "gcr.io/universal-valve-373803/reunion"
         }
       }
     }
