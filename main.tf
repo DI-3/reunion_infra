@@ -6,7 +6,7 @@ resource "google_storage_bucket" "Mithun_N_GCS12" {
 
 resource "google_cloud_run_service" "reunion_cr_service" {
 
-    name = "reunionService"
+    name = "reunion-service"
     location= var.region
 
     metadata {
