@@ -14,7 +14,7 @@ resource "google_cloud_run_service" "reunion_cr_service" {
         "run.googleapis.com/client-name" = "terraform"
       }
     }
-  
+    
     template {
       spec {
         containers {
@@ -22,6 +22,15 @@ resource "google_cloud_run_service" "reunion_cr_service" {
         }
       }
     }
+}
+
+resource "google_sql_database_instance" "reunion_data_store" {
+  name     = "cloud-sql-instance"
+  region   = "us-central1"
+  database_version = "POSTGRES_11"
+  settings {
+    tier = "db-custom-1-3840"
+  }
 }
 
 data "google_iam_policy" "noauth" {
