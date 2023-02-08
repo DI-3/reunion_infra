@@ -3,13 +3,10 @@ resource "google_storage_bucket" "Mithun_N_GCS12" {
   location      = "US"
 }
 
-
-
-
 resource "google_sql_database_instance" "reunion_data_store" {
   name     = "cloud-sql-instance"
   region   = "us-central1"
-  database_version = "POSTGRES_11"
+  database_version = "POSTGRES_14"
   settings {
     tier = "db-custom-1-3840"
   }
